@@ -23,8 +23,9 @@
 #    - collector-sidecar
 #    - init
 
-- name: install the nginx rpm from a remote repo
+- name: install the collector-sidecar rpm from a remote repo
   yum: name=https://github.com/Graylog2/collector-sidecar/releases/download/0.0.9/collector-sidecar-0.0.9-1.x86_64.rpm state=present
+  become: yes
   tags:
     - collector-sidecar
     - init
