@@ -35,7 +35,7 @@
             dest=/etc/graylog/collector-sidecar/collector_sidecar.yml
             owner=root
             group=root
-            mode=0666
+            mode=0646
   #when: zabbix_repo == "zabbix"
   become: yes
   tags:
@@ -45,9 +45,10 @@
 - name: Configure collector_sidecar.yml tags
   lineinfile:
     dest: /etc/graylog/collector-sidecar/collector_sidecar.yml
-    line: "{{ item }}"
+    regexp: ^#tagsforansible
+    line: "{{ host_tags }}"
   with_items:
-    - "#tagsforansible"
+    - ""
     - "{{ host_tags }}"
 
 
