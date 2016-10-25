@@ -4,9 +4,9 @@
 
 server_api: "http://192.168.107.42/api"
 host_tags:
-  - centos
-  - linux
-  - hz
+  - "  - centos"
+  - "  - linux"
+  - "  - hz"
 collector_sidecar_package: collector-sidecar
 collector_sidecar_package_state: present # or latest
 
