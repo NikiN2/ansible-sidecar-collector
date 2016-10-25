@@ -23,12 +23,12 @@
     - collector-sidecar
     - init
 
-#- name: install the collector-sidecar rpm from a remote repo
-#  yum: /tmp/collector-sidecar-0.0.9-1.x86_64.rpm state=present
-#  become: yes
-#  tags:
-#    - collector-sidecar
-#    - init
+- name: install the collector-sidecar rpm from a remote repo
+  yum: /tmp/collector-sidecar-0.0.9-1.x86_64.rpm
+  become: yes
+  tags:
+    - collector-sidecar
+    - init
 
 - name: "RedHat | Install basic repo file"
   template: src=collector_sidecar.j2
