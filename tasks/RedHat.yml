@@ -42,6 +42,14 @@
     - collector-sidecar
     - init
     - config
+- name: Configure collector_sidecar.yml tags
+  lineinfile:
+    dest: /etc/graylog/collector-sidecar/collector_sidecar.yml
+    line: "{{ item }}"
+  with_items:
+    - "#tagsforansible"
+    - {{ host_tags }}
+
 
 - name: "RedHat | Installing zabbix-agent"
   yum:  pkg={{ collector_sidecar_package }}
