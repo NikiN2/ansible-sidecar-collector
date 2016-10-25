@@ -10,8 +10,8 @@
     - init
 
 - name: "Suse | Install zabbix-agent"
-  zypper: name={{ collector-sidecar_package }}
-          state={{ collector-sidecar_package_state }}
+  zypper: name={{ collector_sidecar_package }}
+          state={{ collector_sidecar_package_state }}
           disable_gpg_check=yes
   become: yes
   tags:

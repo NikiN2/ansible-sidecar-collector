@@ -54,8 +54,8 @@
     - init
 
 - name: "Debian | Installing zabbix-agent"
-  apt: pkg={{ collector-sidecar_package }}
-       state={{ collector-sidecar_package_state }}
+  apt: pkg={{ collector_sidecar_package }}
+       state={{ collector_sidecar_package_state }}
        update_cache=yes
        cache_valid_time=0
        # Note: set cache_valid_time=0 to ensure that an apt-get update after the added repo-key
