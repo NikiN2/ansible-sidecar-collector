@@ -15,16 +15,16 @@
 #  tags:
 #    - zabbix-agent
 #    - init
-#- name: download file from a file path
-#  get_url:
-#    url: "https://github.com/Graylog2/collector-sidecar/releases/download/0.0.9/collector-sidecar-0.0.9-1.x86_64.rpm"
-#    dest: /tmp/collector-sidecar-0.0.9-1.x86_64.rpm
-#  tags:
-#    - collector-sidecar
-#    - init
+- name: download file from a file path
+  get_url:
+    url: "https://github.com/Graylog2/collector-sidecar/releases/download/0.0.9/collector-sidecar-0.0.9-1.x86_64.rpm"
+    dest: /tmp/collector-sidecar-0.0.9-1.x86_64.rpm
+  tags:
+    - collector-sidecar
+    - init
 
 - name: install the collector-sidecar rpm from a remote repo
-  yum: name=https://github.com/Graylog2/collector-sidecar/releases/download/0.0.9/collector-sidecar-0.0.9-1.x86_64.rpm state=present update_cache=yes
+  yum: /tmp/collector-sidecar-0.0.9-1.x86_64.rpm state=present update_cache=yes
   become: yes
   tags:
     - collector-sidecar
