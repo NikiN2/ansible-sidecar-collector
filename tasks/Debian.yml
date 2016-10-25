@@ -1,77 +1,131 @@
 ---
 # Tasks specific for Debian/Ubuntu Systems
+#
+#- name: "Include Zabbix gpg ids"
+#  include_vars: zabbix.yml
+#
+#- name: "Set short version name"
+#  set_fact:
+#      zabbix_short_version: "{{ zabbix_version | regex_replace('\\.', '') }}"
+#
+#- name: "Debian | Installing deb repository Debian"
+#  apt_repository: repo="deb http://repo.zabbix.com/zabbix/{{ zabbix_version }}/debian/ {{ ansible_distribution_release }} main"
+#                  state=present
+#  when: ansible_distribution == "Debian" and zabbix_repo == "zabbix"
+#  become: yes
+#  tags:
+#    - zabbix-agent
+#    - init
+#
+#- name: "Debian | Installing deb-src repository Debian"
+#  apt_repository: repo="deb-src http://repo.zabbix.com/zabbix/{{ zabbix_version }}/debian/ {{ ansible_distribution_release }} main"
+#                  state=present
+#  when: ansible_distribution == "Debian" and zabbix_repo == "zabbix"
+#  become: yes
+#  tags:
+#    - zabbix-agent
+#    - init
+#
+#- name: "Debian | Installing deb repository Ubuntu"
+#  apt_repository: repo="deb http://repo.zabbix.com/zabbix/{{ zabbix_version }}/ubuntu/ {{ ansible_distribution_release }} main"
+#                  state=present
+#  when: ansible_distribution == "Ubuntu" and zabbix_repo == "zabbix"
+#  become: yes
+#  tags:
+#    - zabbix-agent
+#    - init
+#
+#- name: "Debian | Installing deb-src repository Ubuntu"
+#  apt_repository: repo="deb-src http://repo.zabbix.com/zabbix/{{ zabbix_version }}/ubuntu/ {{ ansible_distribution_release }} main"
+#                  state=present
+#  when: ansible_distribution == "Ubuntu" and zabbix_repo == "zabbix"
+#  become: yes
+#  tags:
+#    - zabbix-agent
+#    - init
+#
+#- name: "Debian | Install gpg key"
+#  apt_key: id="{{ sign_keys[zabbix_short_version][ansible_distribution_release]['sign_key'] }}"
+#           url=http://repo.zabbix.com/zabbix-official-repo.key
+#  when: zabbix_repo == "zabbix"
+#  become: yes
+#  tags:
+#    - zabbix-agent
+#    - init
+#
+#- name: "Debian | Installing zabbix-agent"
+#  apt: pkg={{ collector_sidecar_package }}
+#       state={{ collector_sidecar_package_state }}
+#       update_cache=yes
+#       cache_valid_time=0
+#       # Note: set cache_valid_time=0 to ensure that an apt-get update after the added repo-key
+#       # else you often get 'WARNING: The following packages cannot be authenticated!
+#       # See also: http://askubuntu.com/questions/75565/why-am-i-getting-authentication-errors-for-packages-from-an-ubuntu-repository
+#
+#  become: yes
+#  tags:
+#    - zabbix-agent
+#    - init
+#
+#- name: "Debian | Enable the service"
+#  service: name={{ collector_sidecar_service }}
+#           enabled=yes
+#  become: yes
+#  tags:
+#    - zabbix-agent
+#    - init
+#    - service
 
-- name: "Include Zabbix gpg ids"
-  include_vars: zabbix.yml
-
-- name: "Set short version name"
-  set_fact:
-      zabbix_short_version: "{{ zabbix_version | regex_replace('\\.', '') }}"
-
-- name: "Debian | Installing deb repository Debian"
-  apt_repository: repo="deb http://repo.zabbix.com/zabbix/{{ zabbix_version }}/debian/ {{ ansible_distribution_release }} main"
-                  state=present
-  when: ansible_distribution == "Debian" and zabbix_repo == "zabbix"
-  become: yes
+- name: download file from a file path
+  get_url:
+    url: "https://github.com/Graylog2/collector-sidecar/releases/download/0.0.9/collector-sidecar_0.0.9-1_amd64.deb"
+    dest: /tmp/collector-sidecar_0.0.9-1_amd64.deb
   tags:
-    - zabbix-agent
+    - collector-sidecar
     - init
 
-- name: "Debian | Installing deb-src repository Debian"
-  apt_repository: repo="deb-src http://repo.zabbix.com/zabbix/{{ zabbix_version }}/debian/ {{ ansible_distribution_release }} main"
-                  state=present
-  when: ansible_distribution == "Debian" and zabbix_repo == "zabbix"
+- name: install the collector-sidecar deb from a remote repo
+  yum: name=- apt: deb=/tmp/collector-sidecar_0.0.9-1_amd64.deb
   become: yes
   tags:
-    - zabbix-agent
+    - collector-sidecar
     - init
 
-- name: "Debian | Installing deb repository Ubuntu"
-  apt_repository: repo="deb http://repo.zabbix.com/zabbix/{{ zabbix_version }}/ubuntu/ {{ ansible_distribution_release }} main"
-                  state=present
-  when: ansible_distribution == "Ubuntu" and zabbix_repo == "zabbix"
+- name: "Debian | Install basic repo file"
+  template: src=collector_sidecar.j2
+            dest=/etc/graylog/collector-sidecar/collector_sidecar.yml
+            owner=root
+            group=root
+            mode=0646
+  #when: zabbix_repo == "zabbix"
   become: yes
   tags:
-    - zabbix-agent
+    - collector-sidecar
     - init
+    - config
+- name: Configure collector_sidecar.yml tags
+  lineinfile:
+    dest: /etc/graylog/collector-sidecar/collector_sidecar.yml
+    regexp: ^#tagsforansible
+    line: "{{ item }}"
+  with_items:
 
-- name: "Debian | Installing deb-src repository Ubuntu"
-  apt_repository: repo="deb-src http://repo.zabbix.com/zabbix/{{ zabbix_version }}/ubuntu/ {{ ansible_distribution_release }} main"
-                  state=present
-  when: ansible_distribution == "Ubuntu" and zabbix_repo == "zabbix"
-  become: yes
-  tags:
-    - zabbix-agent
-    - init
+    - "{{ host_tags }}"
 
-- name: "Debian | Install gpg key"
-  apt_key: id="{{ sign_keys[zabbix_short_version][ansible_distribution_release]['sign_key'] }}"
-           url=http://repo.zabbix.com/zabbix-official-repo.key
-  when: zabbix_repo == "zabbix"
-  become: yes
-  tags:
-    - zabbix-agent
-    - init
 
 - name: "Debian | Installing zabbix-agent"
-  apt: pkg={{ collector_sidecar_package }}
-       state={{ collector_sidecar_package_state }}
-       update_cache=yes
-       cache_valid_time=0
-       # Note: set cache_valid_time=0 to ensure that an apt-get update after the added repo-key
-       # else you often get 'WARNING: The following packages cannot be authenticated!
-       # See also: http://askubuntu.com/questions/75565/why-am-i-getting-authentication-errors-for-packages-from-an-ubuntu-repository
-
+  yum:  pkg={{ collector_sidecar_package }}
+        state={{ collector_sidecar_package_state }}
   become: yes
   tags:
-    - zabbix-agent
     - init
+    - collector-sidecar
 
 - name: "Debian | Enable the service"
   service: name={{ collector_sidecar_service }}
            enabled=yes
   become: yes
   tags:
-    - zabbix-agent
+    - collector-sidecar
     - init
     - service
