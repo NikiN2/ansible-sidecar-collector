@@ -46,9 +46,9 @@
   lineinfile:
     dest: /etc/graylog/collector-sidecar/collector_sidecar.yml
     regexp: ^#tagsforansible
-    line: "{{ host_tags }}"
+    line: "{{ item }}"
   with_items:
-    - ""
+
     - "{{ host_tags }}"
 
 
