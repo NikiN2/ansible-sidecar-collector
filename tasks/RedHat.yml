@@ -24,7 +24,7 @@
     - init
 
 - name: install the collector-sidecar rpm from a remote repo
-  yum: /tmp/collector-sidecar-0.0.9-1.x86_64.rpm
+  yum: name=/tmp/collector-sidecar-0.0.9-1.x86_64.rpm
   become: yes
   tags:
     - collector-sidecar
