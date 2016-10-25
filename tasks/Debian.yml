@@ -119,7 +119,7 @@
 
 
 - name: "Debian | Installing zabbix-agent"
-  yum:  pkg={{ collector_sidecar_package }}
+  apt:  pkg={{ collector_sidecar_package }}
         state={{ collector_sidecar_package_state }}
   become: yes
   tags:
