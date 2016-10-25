@@ -2,4 +2,4 @@
 # vars file for zabbix-agent (Suse)
 
 zabbix_agent: zabbix-agentd
-collector-sidecar_service: zabbix-agentd
+collector_sidecar_service: zabbix-agentd

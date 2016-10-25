@@ -2,4 +2,4 @@
 # vars file for zabbix-agent (Debian)
 
 zabbix_agent: zabbix-agent
-collector-sidecar_service: zabbix-agent
+collector_sidecar_service: zabbix-agent

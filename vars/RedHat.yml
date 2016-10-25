@@ -2,6 +2,6 @@
 # vars file for zabbix-agent (RedHat)
 
 #zabbix_agent: zabbix-agent
-#collector-sidecar_service: zabbix-agent
+#collector_sidecar_service: zabbix-agent
 collector-sidecar: collector-sidecar
-collector-sidecar_service: collector-sidecar
+collector_sidecar_service: collector-sidecar

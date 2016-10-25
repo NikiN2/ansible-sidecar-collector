@@ -2,7 +2,7 @@
 # handlers file for zabbix-agent
 
 - name: restart collector-sidecar
-  service: name={{ collector-sidecar_service }}
+  service: name={{ collector_sidecar_service }}
            state=restarted
            enabled=yes
   become: yes

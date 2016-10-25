@@ -52,7 +52,7 @@
     - collector-sidecar
 
 - name: "RedHat | Enable the service"
-  service: name={{ collector-sidecar_service }}
+  service: name={{ collector_sidecar_service }}
            enabled=yes
   become: yes
   tags:
