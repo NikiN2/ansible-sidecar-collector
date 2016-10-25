@@ -118,19 +118,16 @@
     - "{{ host_tags }}"
 
 
-- name: "Debian | Installing zabbix-agent"
-  apt:  pkg={{ collector_sidecar_package }}
-        state={{ collector_sidecar_package_state }}
+- name: "Debian | Installing as service"
+  command:  graylog-collector-sidecar -service install
   become: yes
   tags:
     - init
     - collector-sidecar
 
-- name: "Debian | Enable the service"
-  service: name={{ collector_sidecar_service }}
-           enabled=yes
+- name: "Debian | Start the service"
+  command:  graylog-collector-sidecar -service start
   become: yes
   tags:
-    - collector-sidecar
     - init
-    - service
+    - collector-sidecar

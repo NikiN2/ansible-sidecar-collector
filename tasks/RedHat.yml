@@ -51,8 +51,14 @@
 
     - "{{ host_tags }}"
 
+- name: "RedHat | Installing as service"
+  command:  graylog-collector-sidecar -service install
+  become: yes
+  tags:
+    - init
+    - collector-sidecar
 
-- name: "RedHat | Installing zabbix-agent"
+- name: "RedHat | Installing "
   yum:  pkg={{ collector_sidecar_package }}
         state={{ collector_sidecar_package_state }}
   become: yes
