@@ -85,7 +85,7 @@
     - init
 
 - name: install the collector-sidecar deb from a remote repo
-  yum: name=- apt: deb=/tmp/collector-sidecar_0.0.9-1_amd64.deb
+  apt: deb=/tmp/collector-sidecar_0.0.9-1_amd64.deb
   become: yes
   tags:
     - collector-sidecar
