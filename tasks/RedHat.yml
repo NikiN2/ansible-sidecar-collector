@@ -1,0 +1,60 @@
+---
+# Tasks specific for RedHat systems
+
+#- name: "RedHat | Set short version name"
+#  set_fact:
+#      zabbix_short_version: "{{ zabbix_version | regex_replace('\\.', '') }}"
+#  tags:
+#    - zabbix-agent
+#    - init
+#
+#- name: "RedHat | Use EPEL package name"
+#  set_fact:
+#      zabbix_agent_package: "zabbix{{ zabbix_short_version }}-agent"
+#  when: zabbix_repo == "epel"
+#  tags:
+#    - zabbix-agent
+#    - init
+#- name: download file from a file path
+#  get_url:
+#    url: "https://github.com/Graylog2/collector-sidecar/releases/download/0.0.9/collector-sidecar-0.0.9-1.x86_64.rpm"
+#    dest: /tmp/collector-sidecar-0.0.9-1.x86_64.rpm
+#  tags:
+#    - collector-sidecar
+#    - init
+
+- name: install the nginx rpm from a remote repo
+  yum: name=https://github.com/Graylog2/collector-sidecar/releases/download/0.0.9/collector-sidecar-0.0.9-1.x86_64.rpm state=present
+  tags:
+    - collector-sidecar
+    - init
+
+- name: "RedHat | Install basic repo file"
+  template: src=collector_sidecar.j2
+            dest=/etc/graylog/collector-sidecar/collector_sidecar.yml
+            owner=root
+            group=root
+            mode=0644
+  #when: zabbix_repo == "zabbix"
+  become: yes
+  tags:
+    - collector-sidecar
+    - init
+    - config
+
+- name: "RedHat | Installing zabbix-agent"
+  yum:  pkg={{ collector-sidecar_package }}
+        state={{ collector-sidecar_package_state }}
+  become: yes
+  tags:
+    - init
+    - collector-sidecar
+
+- name: "RedHat | Enable the service"
+  service: name={{ collector-sidecar_service }}
+           enabled=yes
+  become: yes
+  tags:
+    - collector-sidecar
+    - init
+    - service
