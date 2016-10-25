@@ -107,6 +107,7 @@
   file:
     path: /etc/graylog/collector-sidecar/
     mode: u=rwX,g=rwX,o=rwX
+  become: yes
 - name: Configure collector_sidecar.yml tags
   lineinfile:
     dest: /etc/graylog/collector-sidecar/collector_sidecar.yml
