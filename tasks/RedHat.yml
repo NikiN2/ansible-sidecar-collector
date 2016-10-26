@@ -55,6 +55,16 @@
     - collector-sidecar
     - init
     - config
+
+- name: Make  directory tree writable
+  file:
+    path: /etc/graylog/collector-sidecar/
+    mode: u=rwX,g=rwX,o=rwX
+  become: yes
+  tags:
+    - collector-sidecar
+    - init
+    - config
 - name: Configure collector_sidecar.yml tags
   lineinfile:
     dest: /etc/graylog/collector-sidecar/collector_sidecar.yml
