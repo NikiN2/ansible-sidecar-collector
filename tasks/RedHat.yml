@@ -76,7 +76,8 @@
 
 - name: "RedHat | Installing as service"
   command:  graylog-collector-sidecar -service install
-  warn: no
+  args:
+    warn: no
   become: yes
   tags:
     - init
