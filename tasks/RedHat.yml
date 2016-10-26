@@ -76,8 +76,7 @@
 
 - name: "RedHat | Installing as service"
   command:  graylog-collector-sidecar -service install
-  args:
-    warn: no
+  ignore_errors: yes
   become: yes
   tags:
     - init
@@ -91,3 +90,19 @@
     - collector-sidecar
 
 
+- name: "RedHat | Installing "
+  yum:  pkg={{ collector_sidecar_package }}
+        state={{ collector_sidecar_package_state }}
+  become: yes
+  tags:
+    - init
+    - collector-sidecar
+
+- name: "RedHat | Enable the service"
+  service: name={{ collector_sidecar_service }}
+           enabled=yes
+  become: yes
+  tags:
+    - collector-sidecar
+    - init
+    - service
